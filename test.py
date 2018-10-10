@@ -62,20 +62,25 @@ def get_neighbors(all_node, pos_a):
             viable_neighbors.append(neighbor)
     return viable_neighbors
 
-def solve_maze(neighbors,start):
+def solve_maze(neighbors, pos_a):
     frontier = PriorityQueue()
-    frontier.put(start)
+    frontier.put(pos_a)
     came_from = {}
-    came_from(start) = None
+    came_from(pos_a) = None
 
     while not frontier.empty():
         current = frontier.get()
-        for next in
+        for next in neighbors:
+            if next not in came_from:
+                frontier.put(next)
+                came_from(next) = pos_a
+
+    return came_from
+
 
 
 maze, pos_a, all_node = get_maze()
 neighbors = get_neighbors(all_node, pos_a)
-start = pos_a
 print(pos_a, file=sys.stderr)
 print(neighbors, file=sys.stderr)
 
