@@ -52,16 +52,15 @@ def get_maze():
         current_y += 1
     return maze_list, (a_x, a_y), all_node
 
-class Graph:
-# check neighbors for viable node around A
-    def get_neighbors(all_node, pos_a):
-        viable_neighbors = []
-        for offset in offsets:
-            neighbor = [pos_a[0] + offset[0], pos_a[1] + offset[1]]
-            if neighbor in all_node:
-                viable_neighbors.append(neighbor)
-        return viable_neighbors
 
+# check neighbors for viable node around A
+def get_neighbors(all_node, pos_a):
+    viable_neighbors = []
+    for offset in offsets:
+        neighbor = [pos_a[0] + offset[0], pos_a[1] + offset[1]]
+        if neighbor in all_node:
+            viable_neighbors.append(neighbor)
+    return viable_neighbors
 
 def solve_maze(neighbors,start):
     frontier = PriorityQueue()
@@ -71,7 +70,7 @@ def solve_maze(neighbors,start):
 
     while not frontier.empty():
         current = frontier.get()
-        for next in sub_neighbors =
+        for next in
 
 
 maze, pos_a, all_node = get_maze()
