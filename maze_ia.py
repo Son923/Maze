@@ -1,15 +1,29 @@
 #!/usr/bin/env python3
 import sys
+import heapq
 
 offsets = ((0, 1), (0, -1), (-1, 0), (1, 0))
 
-sys.stdin.readline()
+sys.stdin.readline() # skip hello
 print("I AM Son\n")
 sys.stdin.readline()
 print("OK\n")
 sys.stdin.readline()
 sys.stdin.readline()
 sys.stdin.readline()
+
+class PriorityQueue:
+    def __init__(self):
+        self.elements = []
+
+    def empty(self):
+        return len(self.elements) == 0
+
+    def put(self, item, priority):
+        heapq.heappush(self.elements, (priority, item))
+
+    def get(self):
+        return heapq.heappop(self.elements)[1]
 
 
 # get the maze from the VM
@@ -39,7 +53,7 @@ def get_maze():
     return maze_list, (a_x, a_y), all_node
 
 
-# check neighbors
+# check neighbors for viable node around A
 def get_neighbors(all_node, pos_a):
     viable_neighbors = []
     for offset in offsets:
@@ -48,14 +62,9 @@ def get_neighbors(all_node, pos_a):
             viable_neighbors.append(neighbor)
     return viable_neighbors
 
-# solve the maze
-def solve_maze(maze, pos_a):
-    print(pos_a, file=sys.stderr)
-    print(all_node, file=sys.stderr)
-    print(maze) # print move
-
 
 maze, pos_a, all_node = get_maze()
 neighbors = get_neighbors(all_node, pos_a)
+print(pos_a, file=sys.stderr)
 print(neighbors, file=sys.stderr)
-solve_maze(maze, pos_a)
+
