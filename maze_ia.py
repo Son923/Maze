@@ -20,7 +20,6 @@ class SquareGrid:
     def neighbors(self, id):
         (x, y) = id
         results = [(x + 1, y), (x, y - 1), (x - 1, y), (x, y + 1)]
-        if (x + y) % 2 == 0: results.reverse()  # aesthetics
         results = filter(self.in_bounds, results)
         results = filter(self.passable, results)
         return results
@@ -32,8 +31,8 @@ class GridWithWeights(SquareGrid):
         self.gems = []
         self.coins = []
 
-    def cost(self, from_node, to_node):
-        return 1 if to_node in self.gems else 5 if to_node in self.coins else 50
+    def cost(self, from_node, tonode):
+        return 1 if tonode in self.gems else 5 if tonode in self.coins else 50
 
 
 class PriorityQueue:
@@ -88,7 +87,7 @@ def reconstruct_path(came_from, start, goal):
     return path
 
 
-def reconstruct_path_from_a_star_search(graph, start, goal):
+def reconstruct(graph, start, goal):
     came_from, cost_so_far = a_star_search(graph, start, goal)
     return reconstruct_path(came_from, start, goal)
 
@@ -149,7 +148,7 @@ def move(start, end):
 
 
 def move_to_nearest(graph, start, goals):
-    paths = list(map(lambda goal: reconstruct_path_from_a_star_search(graph, start, goal), goals))
+    paths = list(map(lambda goal: reconstruct(graph, start, goal), goals))
     path = min(paths, key=lambda current_path: len(current_path))
     print("MOVE " + move(start, path[0]) + '\n')
 
