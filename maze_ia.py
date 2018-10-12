@@ -163,7 +163,4 @@ sys.stdin.readline()
 sys.stdin.readline()
 
 while True:
-    try:
-        parse_maze()
-    except TimeoutError:
-        break
+    parse_maze()
