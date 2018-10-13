@@ -162,5 +162,6 @@ sys.stdin.readline()
 sys.stdin.readline()
 sys.stdin.readline()
 
-while True:
+s = sys.stdin.readline()
+while s is not None:
     parse_maze()
