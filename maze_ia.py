@@ -4,8 +4,10 @@ import heapq
 
 
 # class represents graph
-class SquareGrid:
+class GridWithWeights():
     def __init__(self, width, height):
+        self.gems = []
+        self.coins = []
         self.width = width
         self.height = height
         self.walls = []
@@ -23,13 +25,6 @@ class SquareGrid:
         results = filter(self.in_bounds, results)
         results = filter(self.passable, results)
         return results
-
-
-class GridWithWeights(SquareGrid):
-    def __init__(self, width, height):
-        super().__init__(width, height)
-        self.gems = []
-        self.coins = []
 
     def cost(self, from_node, tonode):
         return 1 if tonode in self.gems else 5 if tonode in self.coins else 50
