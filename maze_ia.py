@@ -11,6 +11,7 @@ class Grid():
         self.width = width
         self.height = height
         self.walls = []     # list of '#'
+        self.players = []
 
     def in_bounds(self, id):
         (x, y) = id
@@ -29,7 +30,8 @@ class Grid():
         return results
 
     def cost(self, from_node, tonode):
-        return 1 if tonode in self.gems else 5 if tonode in self.coins else 50
+        return 1 if tonode in self.gems else 5 if tonode in self.coins \
+            else 45 if tonode in self.players else 50
 
 
 # Class
@@ -92,12 +94,12 @@ def reconstruct(graph, start, goal):
 
 # get the maze as a graph, rewards and gems from the VM
 def parse_maze():
-    sys.stdin.readline()
     # parse the maze
     maze = []
     coins = []
     gems = []
     walls = []
+    players = []
     line = sys.stdin.readline()
     current_y = 0
     # main_player
@@ -110,7 +112,7 @@ def parse_maze():
         for char in line:
             if char != '\n':
                 row_maze_list.append(char)
-                if char == 'A':     # position of main player
+                if char == main_player:     # position of main player
                     a_x = current_x
                     a_y = current_y
                 elif char == 'o':   # position of 'o'
@@ -119,6 +121,8 @@ def parse_maze():
                     gems.append((current_x, current_y))
                 elif char == '#':   # position of '#' and 'players'
                     walls.append((current_x, current_y))
+                elif char.isupper():    # position of other players
+                    players.append((current_x, current_y))
             current_x += 1
         maze.append(row_maze_list)
         line = sys.stdin.readline()     # read next line of the maze
@@ -129,6 +133,7 @@ def parse_maze():
     maze_graph.walls = walls
     maze_graph.gems = gems
     maze_graph.coins = coins
+    maze_graph.players = players
 
     move_to_nearest(maze_graph, (a_x, a_y), gems + coins)
 
@@ -149,7 +154,9 @@ def move(start, end):
 
 
 def move_to_nearest(graph, start, goals):
-    paths = list(map(lambda goal: reconstruct(graph, start, goal), goals))
+    paths = []
+    for goal in goals:  # create a list of viable paths
+        paths.append(reconstruct(graph, start, goal))
     path = min(paths, key=lambda current_path: len(current_path))
     print("MOVE " + move(start, path[0]) + '\n')
 
@@ -158,14 +165,13 @@ def move_to_nearest(graph, start, goals):
 sys.stdin.readline()    # HELLO
 print("I AM Son\n")
 sys.stdin.readline()    # \n
-# string = sys.stdin.readline()    # YOU ARE <LETTER>
-# main_player = string.split(' ')[2]
+string = sys.stdin.readline()    # YOU ARE <LETTER>
+main_player = string.split(' ')[2].strip('\n')
 print("OK\n")
 sys.stdin.readline()    # \n
 sys.stdin.readline()    # MAZE
 
-
-s = sys.stdin.readline()    # read first line of maze: ##..##
-while s != '':    # Check if EOF
+s = 0    # first condition of s
+while s is not None:    # Check if EOF
     parse_maze()
     s = sys.stdin.readline()  # read next line after maze
