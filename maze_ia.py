@@ -4,21 +4,23 @@ import heapq
 
 
 # class represents graph
-class GridWithWeights():
+class Grid():
     def __init__(self, width, height):
-        self.gems = []
-        self.coins = []
+        self.gems = []      # list of '!'
+        self.coins = []     # list of 'o'
         self.width = width
         self.height = height
-        self.walls = []
+        self.walls = []     # list of '#'
 
     def in_bounds(self, id):
         (x, y) = id
         return 0 <= x < self.width and 0 <= y < self.height
 
+    # get passable positions
     def passable(self, id):
         return id not in self.walls
 
+    # get viable move around id
     def neighbors(self, id):
         (x, y) = id
         results = [(x + 1, y), (x, y - 1), (x - 1, y), (x, y + 1)]
@@ -30,6 +32,7 @@ class GridWithWeights():
         return 1 if tonode in self.gems else 5 if tonode in self.coins else 50
 
 
+# Class
 class PriorityQueue:
     def __init__(self):
         self.elements = []
@@ -97,30 +100,32 @@ def parse_maze():
     walls = []
     line = sys.stdin.readline()
     current_y = 0
+    # main_player
     a_x = 0
     a_y = 0
 
-    while line != "\n":
+    while line != "\n":     # check if last line of maze
         current_x = 0
         row_maze_list = []
         for char in line:
             if char != '\n':
                 row_maze_list.append(char)
-                if char == 'A':
+                if char == 'A':     # position of main player
                     a_x = current_x
                     a_y = current_y
-                elif char == 'o':
+                elif char == 'o':   # position of 'o'
                     coins.append((current_x, current_y))
-                elif char == '!':
+                elif char == '!':   # position of '!'
                     gems.append((current_x, current_y))
-                elif char == '#':
+                elif char == '#':   # position of '#' and 'players'
                     walls.append((current_x, current_y))
             current_x += 1
         maze.append(row_maze_list)
-        line = sys.stdin.readline()
+        line = sys.stdin.readline()     # read next line of the maze
         current_y += 1
 
-    maze_graph = GridWithWeights(len(maze[0]), len(maze))
+    # create a graph from maze, move to
+    maze_graph = Grid(len(maze[0]), len(maze))
     maze_graph.walls = walls
     maze_graph.gems = gems
     maze_graph.coins = coins
@@ -128,6 +133,7 @@ def parse_maze():
     move_to_nearest(maze_graph, (a_x, a_y), gems + coins)
 
 
+# Move mechanic
 def move(start, end):
     start_x, start_y = start
     end_x, end_y = end
@@ -149,14 +155,17 @@ def move_to_nearest(graph, start, goals):
 
 
 # Init protocol
-sys.stdin.readline()
+sys.stdin.readline()    # HELLO
 print("I AM Son\n")
-sys.stdin.readline()
+sys.stdin.readline()    # \n
+# string = sys.stdin.readline()    # YOU ARE <LETTER>
+# main_player = string.split(' ')[2]
 print("OK\n")
-sys.stdin.readline()
-sys.stdin.readline()
-sys.stdin.readline()
+sys.stdin.readline()    # \n
+sys.stdin.readline()    # MAZE
 
-s = sys.stdin.readline()
-while s is not None:
+
+s = sys.stdin.readline()    # read first line of maze: ##..##
+while s != '':    # Check if EOF
     parse_maze()
+    s = sys.stdin.readline()  # read next line after maze
